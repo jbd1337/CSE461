@@ -11,7 +11,6 @@
 *******************************************************************/
 
 #include "Filesys.h"
-#include "Sdisk.h"
 #include "Sdisk.cpp"
 #include <vector>
 #include <string>
@@ -21,13 +20,13 @@ using namespace std;
 
 void Filesys::Filesys(string disk, int numberofblocks, int bloacksize): Sdisk(disk,numberofblocks,blocksize){
     istring buffer;
-    rootsize = Sdisk::getblocksize() / 12;
-    fatsize = (Sdisk::getnumberofblocks() * 6.0) / (Sdisk::getblocksize() + 1);
+    rootsize = getblocksize() / 12;
+    fatsize = (getnumberofblocks() * 6.0) / (getblocksize() + 1);
     //If sdisk has root and fat read in to memory.
     if (buffer2[0] != '#') {
     istringstream buffer1, buffer4;
     string buffer2, buffer3;
-    Sdisk::getblock(0,buffer2);
+    getblock(0,buffer2);
     buffer1.str(buffer2);
         for (int i = 0; i < rootsize; i++) {
             string s;
@@ -38,11 +37,11 @@ void Filesys::Filesys(string disk, int numberofblocks, int bloacksize): Sdisk(di
         }
         for (int i = 1; i <= fatsize; i++) {
            string s;
-           Sdisk::getblock(i,s);
+           getblock(i,s);
            buffer3 += s;
         }
         buffer4.str(buffer3);
-        for (int i = 0; i < Sdisk::getnumberofblocks(); i++) {
+        for (int i = 0; i < getnumberofblocks(); i++) {
             int n = 0;
             buffer4 >> n;
             fat.push_back(n)
@@ -59,7 +58,7 @@ void Filesys::Filesys(string disk, int numberofblocks, int bloacksize): Sdisk(di
         for (int i = 1; i <= fatsize; i++) {
            fat.push_back(1); 
         }
-        for (int i = fatsize + 1; i < Sdisk::getnumberofblocks(); i++) {
+        for (int i = fatsize + 1; i < getnumberofblocks(); i++) {
            fat.push_back(i + 1); 
         }
         fat[fatsize - 1] = 0;
@@ -125,11 +124,11 @@ int Filesys::fssynch() {
     string buffer3, buffer4;
     buffer3 = buffer1.str();
     buffer4 = buffer2.str();
-    std::vector<string> blocks1 = block(buffer3, Sdisk::getblocksize());
-    std::vector<string> blocks2 = block(buffer4, Sdisk::getblocksize());
-    Sdisk::putblock(0,blocks1[0]);
+    std::vector<string> blocks1 = block(buffer3, getblocksize());
+    std::vector<string> blocks2 = block(buffer4, getblocksize());
+    putblock(0,blocks1[0]);
     for (int i = 0; i < blocks2.size(); i++) {
-        Sdisk::putblock(i + 1,blocks2[i]);
+        putblock(i + 1,blocks2[i]);
     }
 
 
@@ -181,7 +180,7 @@ int Filesys::getfirstblocknumber(string file) {
 
 int Filesys::addblock(string file, string block) {
     if(checkblock(file, block){
-        Sdisk::getblock(block,buffer);
+        getblock(block,buffer);
     }
     int firstb = getfirstblocknumber(file);
     if (firstb == -1) {
@@ -209,7 +208,7 @@ int Filesys::addblock(string file, string block) {
         }
         fat[block] = allocate;
     }
-    Sdisk::putblock(allocate,buffer);
+    putblock(allocate,buffer);
     fssynch();
 }
 
@@ -256,7 +255,7 @@ int Filesys::readblock(string file, int blocknumber, string& buffer) {
          return 0;
      }
      if (fat[block] == blocknumber) {
-         Sdisk::getblock(blocknumber, buffer);
+         getblock(blocknumber, buffer);
          return 1;
      }
 }
