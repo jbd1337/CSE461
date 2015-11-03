@@ -23,8 +23,9 @@ public:
     int writeblock(string file, int blocknumber, string buffer);
     int nextblock(string file, int blocknumber);
     void test(string stuff);
-    void checkRoot();
-    void checkFat();
+    void printRoot();
+    void printFat();
+    void newline();
 private:
     int rootsize;
     int fatsize;

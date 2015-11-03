@@ -18,7 +18,20 @@
 using namespace std;
 
 void Filesys::test(string stuff) {
-    cout <<  stuff << endl;
+	cout <<  stuff << endl;
+}
+void Filesys::printRoot(){
+	for (int i = 0; i < filename.size(); i++) {
+		cout << "Filename: " << filename[i] << " Firstblock: " << firstblock[i] << endl;
+	}
+}
+void Filesys::printFat(){
+	for (int i = 0; i < fat.size(); i++) {
+		cout << "Fat: " << i << " Fat Content: "  << fat[i] << endl;
+	}
+}
+void Filesys::newline() {
+	cout << endl;
 }
 Filesys::Filesys(string disk, int numberofblocks, int blocksize): Sdisk(disk ,numberofblocks,blocksize){
 	istringstream buffer;
@@ -27,7 +40,7 @@ Filesys::Filesys(string disk, int numberofblocks, int blocksize): Sdisk(disk ,nu
 	rootsize = getblocksize() / 12;
 	fatsize = (getnumberofblocks() * 6.0) / (getblocksize() + 1);
 	//If sdisk has root and fat read in to memory.
-        getblock(0,buffer2);
+		getblock(0,buffer2);
 	if (buffer2[0] != '#') {
 		getblock(0,buffer2);
 	buffer1.str(buffer2);
@@ -134,8 +147,6 @@ int Filesys::fssynch() {
 	for (int i = 0; i < blocks2.size(); i++) {
 		putblock(i + 1,blocks2[i]);
 	}
-
-
 }
 
 int Filesys::newfile(string file) {
@@ -177,7 +188,7 @@ int Filesys::rmfile(string file) {
 int Filesys::getfirstblocknumber(string file) {
 	int block;
 	bool filefound;
-	if (file[0] != ' ') {
+	if (file[0] == '.') {
 		return 0;
 		
 	}
@@ -198,12 +209,12 @@ int Filesys::getfirstblocknumber(string file) {
 int Filesys::addblock(string file, string buffer) {
 	int firstb = getfirstblocknumber(file);
 	if (firstb == -1) {
-		cout << "File does not exist.";
+		cout << "File does not exist." << endl;
 		return 0;
 	}	
 	int allocate = fat[0];
 	if (allocate == 0) {
-		cout << "No space on device.";
+		cout << "No space on device." << endl;
 		return 0;
 	}
 	fat[0] = fat[allocate];
@@ -227,10 +238,15 @@ int Filesys::addblock(string file, string buffer) {
 }
 
 int Filesys::delblock(string file, int blocknumber) {
-  if (checkblock(file,blocknumber)) {
-	  cout << "File does not exist or block does not belong to file.";
-	  return 0;
-  }  
+	int firstb = getfirstblocknumber(file);
+	if (firstb == -1) {
+		cout << "File does not exist" << endl;
+		return 0;
+	}
+	if (firstb == 0) {
+		cout << "File is empty" << endl;
+		return 0;
+	}
   if (getfirstblocknumber(file) == blocknumber) {
 	  for (int i = 0; i < filename.size(); i++) {
 		  if (filename[i] == file) {
@@ -253,11 +269,11 @@ int Filesys::readblock(string file, int blocknumber, string& buffer) {
 	int firstb = getfirstblocknumber(file);
 	int block;
 	if (firstb == -1) {
-		cout << "File does not exist";
+		cout << "File does not exist" << endl;
 		return 0;
 	}
 	if (firstb == 0) {
-		cout << "File is empty";
+		cout << "File is empty" << endl;
 		return 0;
 	}
 	block == firstb;
@@ -265,7 +281,7 @@ int Filesys::readblock(string file, int blocknumber, string& buffer) {
 		block = fat[block];	
 	}
 	 if (fat[block]) {
-		 cout << "Block not found";
+		 cout << "Block not found" << endl;
 		 return 0;
 	 }
 	 if (fat[block] == blocknumber) {
@@ -278,11 +294,11 @@ int Filesys::writeblock(string file, int blocknumber, string buffer) {
 	int firstb = getfirstblocknumber(file);
 	int writeblock = firstb;
 	if(firstb == -1){
-	  cout << "File does not exist";
+	  cout << "File does not exist" << endl;
 	  return 0;
 	}
 	if(firstb == 0){
-	  cout << "File is empty";
+	  cout << "File is empty" << endl;
 	  return 0;
 	}
 	while(fat[writeblock] != blocknumber && fat[writeblock] != 0){	
@@ -293,7 +309,7 @@ int Filesys::writeblock(string file, int blocknumber, string buffer) {
 		return 1;
 	}
 	else{
-		cout << "Block not found";
+		cout << "Block not found" << endl;
 		return 0;
 	}
 }
@@ -301,11 +317,11 @@ int Filesys::writeblock(string file, int blocknumber, string buffer) {
 int Filesys::nextblock(string file, int blocknumber) {
 	int firstb = getfirstblocknumber(file);
 	if (firstb == -1) {
-		cout << "File does not exist.";
+		cout << "File does not exist." << endl; 
 		return 0;
 	}
 	if (firstb == 0) {
-		cout << "File is empty.";
+		cout << "File is empty." << endl;
 		return 0;
 	}
 	return fat[blocknumber];
