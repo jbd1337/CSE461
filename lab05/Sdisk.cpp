@@ -7,8 +7,7 @@
 * Description: Program to emulate disk for writing file system for.
 *
 *******************************************************************/
-
-#include "Sdisk.cpp"
+#include "Sdisk.h"
 #include <fstream>
 #include <string>
 #include <iostream>

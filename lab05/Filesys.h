@@ -4,9 +4,8 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <iostream>
 #include "Sdisk.h"
-#include "Sdisk.cpp"
-
 using namespace std;
 
 class Filesys: public Sdisk {
@@ -23,6 +22,9 @@ public:
     int readblock(string file, int blocknumber, string& buffer);
     int writeblock(string file, int blocknumber, string buffer);
     int nextblock(string file, int blocknumber);
+    void test(string stuff);
+    void checkRoot();
+    void checkFat();
 private:
     int rootsize;
     int fatsize;
