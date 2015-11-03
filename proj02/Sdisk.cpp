@@ -7,7 +7,6 @@
 * Description: Program to emulate disk for writing file system for.
 *
 *******************************************************************/
-
 #include "Sdisk.h"
 #include <fstream>
 #include <string>
@@ -81,7 +80,7 @@ int Sdisk::putblock(int blocknumber, string buffer) {
 }
 
 int Sdisk::getnumberofblocks() {
-    return numberofblocks
+    return numberofblocks;
 }
 
 int Sdisk::getblocksize() {

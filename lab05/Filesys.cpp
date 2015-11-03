@@ -250,7 +250,7 @@ int Filesys::delblock(string file, int blocknumber) {
   if (getfirstblocknumber(file) == blocknumber) {
 	  for (int i = 0; i < filename.size(); i++) {
 		  if (filename[i] == file) {
-			  firstblock[i] == fat[blocknumber];
+			  firstblock[i] = fat[blocknumber];
 		  }
 	  }
   }
