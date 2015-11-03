@@ -8,7 +8,7 @@
 *
 *******************************************************************/
 
-#include "Sdisk.h"
+#include "Sdisk.cpp"
 #include <fstream>
 #include <string>
 #include <iostream>

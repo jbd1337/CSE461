@@ -1,12 +1,10 @@
 // You can use this to test your Filesys class 
 
-#include "Filesys.h"
-#include "Sdisk.h"
+#include "Filesys.cpp"
 #include "Sdisk.cpp"
 #include <vector>
 #include <string>
-#include <ostringstream>
-
+#include <iostream>
 using namespace std;
 
 int main()
@@ -14,7 +12,7 @@ int main()
   Sdisk disk1("disk1",256,128);
   Filesys fsys("disk1",256,128);
   fsys.newfile("file1");
-  fsys.newfile("file2"};
+  fsys.newfile("file2");
 
   string bfile1;
   string bfile2;
@@ -24,23 +22,23 @@ int main()
        bfile1+="1";
      }
 
-  vector<string> blocks=block(bfile1,128); 
+  vector<string> blocks=fsys.block(bfile1,128); 
 
-  int blocknumber=0
+  int blocknumber=0;
 
-  for (int i=0; i< blocks.size(); i++)
+  for (int i=0; i < blocks.size(); i++)
      {
        blocknumber=fsys.addblock("file1",blocks[i]);
      }
 
-  fsys.delblock("file1",fsys.getfirstblock("file1"));
+  fsys.delblock("file1",fsys.getfirstblocknumber("file1"));
 
   for (int i=1; i<=2048; i++)
      {
        bfile2+="2";
      }
 
-  blocks=block(bfile2,128); 
+  blocks=fsys.block(bfile2,128); 
 
   for (int i=0; i< blocks.size(); i++)
      {
